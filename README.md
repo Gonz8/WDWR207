@@ -1,0 +1,2 @@
+# WDWR
+ Planowanie produkcji 
