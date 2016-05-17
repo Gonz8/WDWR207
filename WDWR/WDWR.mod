@@ -9,13 +9,12 @@
 {string} Resources = ...;
 int NbMonths   = ...;
 range Months = 1..NbMonths;
-float CostProd[Components][Months] = ...;
 float Supply[Resources][Months] = ...;
 
-//int N = ...;
-//range NbScenarios = 1..N;
-//{int} Scenarios = asSet(NbScenarios);
-//float Samples[NbScenarios][Months][Products] = ...;
+int N = ...;
+range NbScenarios = 1..N;
+{int} Scenarios = asSet(NbScenarios);
+float CostProd[NbScenarios][Components][Months] = ...;
 
 //Zmienne decyzyjne
 dvar int+ Production[Components][Months];
@@ -25,18 +24,29 @@ dvar boolean BinVar[Months];
 
 
 //Kryteria
-dexpr float Cost = sum( m in Months ) 
+dexpr float Cost[t in Scenarios] = sum( m in Months ) 
 		(	
-			sum( c in Components ) ( CostProd[c][m] * Production[c][m] )
+			sum( c in Components ) ( CostProd[t][c][m] * Production[c][m] )
 			+ (1 - BinVar[m]) * 2500
-			+ BinVar[m] * 0.15 * ( sum ( c in Components ) CostProd[c][m] * Production[c][m] )
+			+ BinVar[m] * 0.15 * ( sum ( c in Components ) CostProd[t][c][m] * Production[c][m] )
 	   	);
+	   	
+dexpr float AvgCost = (sum( t in Scenarios ) Cost[t]) / N;
 
+dexpr float AvgCost2 = (sum( t in Scenarios ) abs(Cost[t])) / N;
 
+//dexpr float rCost = abs(AvgCost+11);
+//dexpr float rCost =  ( sum(i in Scenarios, j in Scenarios ) abs(Cost[i] - Cost[j])) * 1/N * 1/N; 
+
+dexpr float Risk = sum (t1 in Scenarios, t2 in Scenarios ) (
+			0.5 * abs(Cost[t1] - Cost[t2]) * 1/N * 1/N
+		);
+//dexpr float Risk[t in Scenarios] = abs(AvgCost - Cost[t]);
+//dexpr float whlRiska = (sum(t in Scenarios) Risk[t])/N;
 
 //Funkcja celu	  	
 minimize 
-  Cost;
+  Risk;
   
 //Ograniczenia  
 subject to {
@@ -45,6 +55,8 @@ subject to {
     sum( m in Months ) Production["A"][m] == 1100;
   o2:
     sum( m in Months ) Production["B"][m] == 1200;
+  okryt:
+    AvgCost >= 0; 
 
       
   forall( m in Months ) {
