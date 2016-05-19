@@ -1,5 +1,18 @@
-
 library("MASS")
+
+limit <- function(vec, min, max)
+{
+  lt_min = which(vec < min);
+  for(i in lt_min) {
+    vec[i] = min;
+  }
+  gt_max = which(vec > max);
+  for(i in gt_max) {
+    vec[i] = max;
+  }
+  vec
+}
+
 
 n = 10
 
@@ -17,6 +30,7 @@ path = "C:\\Users\\Dominik\\Desktop\\WDWR\\projekt\\WDWR\\Scenariusze.dat"
 
 sigma = matrix(covariance, 6, 6)
 Rvec = mvrnorm(n = n , mu = mu, Sigma = sigma)
+Rvec = limit(Rvec, min = 20, max = 60)
 
 lines = c(paste("N = ", toString(n), ";"), "CostProd = ", "[")
 

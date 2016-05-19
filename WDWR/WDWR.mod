@@ -55,8 +55,12 @@ subject to {
     sum( m in Months ) Production["A"][m] == 1100;
   o2:
     sum( m in Months ) Production["B"][m] == 1200;
-  okryt:
-    AvgCost >= 0; 
+//  okryt:
+//    AvgCost >= 0; 
+//	forall( t in Scenarios ) {
+// 		oCost:
+// 		  Cost[t] >= 0;
+// 	}	  
 
       
   forall( m in Months ) {
