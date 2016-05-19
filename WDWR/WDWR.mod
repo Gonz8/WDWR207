@@ -21,28 +21,27 @@ dvar int+ Production[Components][Months];
 dvar float+ Use[Resources][Components][Months];
 dvar int+ Storage[Months];
 dvar boolean BinVar[Months];
-
+dvar float cDiff[Scenarios][Scenarios];
+dvar float+ cD1[Scenarios][Scenarios];
+dvar float+ cD2[Scenarios][Scenarios];
 
 //Kryteria
 dexpr float Cost[t in Scenarios] = sum( m in Months ) 
 		(	
 			sum( c in Components ) ( CostProd[t][c][m] * Production[c][m] )
 			+ (1 - BinVar[m]) * 2500
-			+ BinVar[m] * 0.15 * ( sum ( c in Components ) CostProd[t][c][m] * Production[c][m] )
+			//+ BinVar[m] * 0.15 * ( sum ( c in Components ) CostProd[t][c][m] * Production[c][m] )
 	   	);
 	   	
 dexpr float AvgCost = (sum( t in Scenarios ) Cost[t]) / N;
 
 dexpr float AvgCost2 = (sum( t in Scenarios ) abs(Cost[t])) / N;
 
-//dexpr float rCost = abs(AvgCost+11);
-//dexpr float rCost =  ( sum(i in Scenarios, j in Scenarios ) abs(Cost[i] - Cost[j])) * 1/N * 1/N; 
+//dexpr float cDiff[t1 in Scenarios, t2 in Scenarios] = Cost[t1] - Cost[t2];
 
 dexpr float Risk = sum (t1 in Scenarios, t2 in Scenarios ) (
-			0.5 * abs(Cost[t1] - Cost[t2]) * 1/N * 1/N
+			0.5 * abs(cD1[t1][t2] + cD2[t1][t2]) * 1/N * 1/N
 		);
-//dexpr float Risk[t in Scenarios] = abs(AvgCost - Cost[t]);
-//dexpr float whlRiska = (sum(t in Scenarios) Risk[t])/N;
 
 //Funkcja celu	  	
 minimize 
@@ -55,13 +54,19 @@ subject to {
     sum( m in Months ) Production["A"][m] == 1100;
   o2:
     sum( m in Months ) Production["B"][m] == 1200;
-//  okryt:
-//    AvgCost >= 0; 
-//	forall( t in Scenarios ) {
-// 		oCost:
-// 		  Cost[t] >= 0;
-// 	}	  
-
+	forall( t in Scenarios ) {
+ 		oCost:
+ 		  Cost[t] >= 0;
+ 	}	  
+  
+  forall( t1 in Scenarios ) {
+  	forall( t2 in Scenarios ) {
+  	  oabs:
+  	    cDiff[t1][t2] == Cost[t1] - Cost[t2];
+  	  oabs1:
+  	    cDiff[t1][t2] == cD1[t1][t2] - cD2[t1][t2];
+    }  	   
+  }    
       
   forall( m in Months ) {
     o3a:
