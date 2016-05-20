@@ -2,9 +2,17 @@
 	<version>1.0</version>
 	<configs>
 		<config default="true" name="Konfiguracja1" category="opl">
-			<ref type="model" name="WDWR.mod">
+			<ref type="model" name="WDWR_minCost.mod">
 			</ref>
-			<ref type="data" name="WDWR.dat">
+			<ref type="data" name="bscData.dat">
+			</ref>
+			<ref type="data" name="Scenariusze.dat">
+			</ref>
+		</config>
+		<config default="false" name="Konfiguracja2" category="opl">
+			<ref type="model" name="WDWR_minRisk.mod">
+			</ref>
+			<ref type="data" name="bscData.dat">
 			</ref>
 			<ref type="data" name="Scenariusze.dat">
 			</ref>

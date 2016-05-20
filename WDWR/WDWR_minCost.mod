@@ -42,21 +42,21 @@ dexpr float Risk = sum (t1 in Scenarios, t2 in Scenarios ) (
 
 //Funkcja celu	  	
 minimize 
-  0.9*Risk + 0.1*AvgCost;
+  AvgCost;
   
 //Ograniczenia  
 subject to {
 
-  o1:
+  oUmowaA:
     sum( m in Months ) Production["A"][m] == 1100;
-  o2:
+  oUmowaB:
     sum( m in Months ) Production["B"][m] == 1200; 
-
       
   forall( m in Months ) {
     forall( r in Resources ) {
       forall( c in Components ) {
-        RequestRC[r][c] * Production[c][m] == Use[r][c][m]; 
+        oRequest:
+          RequestRC[r][c] * Production[c][m] == Use[r][c][m]; 
       }             
     }        
 //    o3a:
@@ -67,28 +67,28 @@ subject to {
 //      0.7 * Production["B"][m] == Use["Z1"]["B"][m];
 //    o4b:
 //      0.3 * Production["B"][m] == Use["Z2"]["B"][m];
-    o5:
+    oStorageState:
       sum ( n in 1..m ) ( 
       	sum ( c in Components ) Production[c][n] 
       ) == Storage[m];
-    o6:
+    oStorageSt1:
       Storage[m] <= 300 + M * BinVar[m];
-    o6a:
+    oStorageSt2:
       Storage[m] >= 300 * BinVar[m];
       
     forall (t in Scenarios) {
-      olin1:
+      oLin1:
         StoreCostP[t][m] <= M * BinVar[m];
-      olin2:
+      oLin2:
         StoreCostP[t][m] <= 0.15 * ( sum ( c in Components ) CostProd[t][c][m] * Production[c][m] );
-      olin3:
+      oLin3:
         0.15 * ( sum ( c in Components ) CostProd[t][c][m] * Production[c][m] ) - StoreCostP[t][m] + M * BinVar[m] <= M;
     }      
   }
   
   forall( r in Resources )
     forall( m in Months ) {
-      o7:
+      oSupplyLimit:
         Use[r]["A"][m] + Use[r]["B"][m] <= Supply[r][m];
   	}
 
