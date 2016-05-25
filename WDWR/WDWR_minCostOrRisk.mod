@@ -13,6 +13,8 @@ float Supply[Resources][Months] = ...;
 float RequestRC[Resources][Components] = ...;
 int M = ...;
 
+int IsMinCost = ...; //czy minimalizacja kosztu 1/0 (else ryzyko)
+
 int N = ...;
 range NbScenarios = 1..N;
 {int} Scenarios = asSet(NbScenarios);
@@ -42,7 +44,7 @@ dexpr float Risk = sum (t1 in Scenarios, t2 in Scenarios ) (
 
 //Funkcja celu	  	
 minimize 
-  AvgCost;
+  IsMinCost * AvgCost + (1 - IsMinCost) * Risk;
   
 //Ograniczenia  
 subject to {
@@ -96,6 +98,6 @@ subject to {
 
 
 
-execute DISPLAY {
-         writeln("Risk = ",Risk,", AvgCost = ",AvgCost);
+execute {
+	writeln("AvgCost: ",AvgCost,", Risk: ",Risk);
 }

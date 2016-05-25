@@ -4,7 +4,7 @@
  * Creation Date: 10-05-2016 at 20:31:37
  *********************************************/
 
- //Parametry
+ ////Parametry
 {string} Components = ...;
 {string} Resources = ...;
 int NbMonths   = ...;
@@ -18,15 +18,30 @@ range NbScenarios = 1..N;
 {int} Scenarios = asSet(NbScenarios);
 float CostProd[NbScenarios][Components][Months] = ...;
 
-//Zmienne decyzyjne
+//Parametry MPO
+float AspAvgCost = ...; //wartosc aspiracji dla kosztu
+float lambdaAvgCost = ...;
+
+float AspRisk = ...; //wartosc aspiracji dla ryzyka
+float lambdaRisk = ...;
+
+float epsilon = ...;
+float beta = ...;
+
+////Zmienne decyzyjne
 dvar int+ Production[Components][Months];
 dvar float+ Use[Resources][Components][Months];
 dvar int+ Storage[Months];
 dvar boolean BinVar[Months];
 dvar float+ StoreCostP[NbScenarios][Months];
 
+//MPO
+dvar float z;
+dvar float MPOCost;
+dvar float MPORisk;
 
-//Kryteria
+
+////Kryteria
 dexpr float Cost[t in Scenarios] = sum( m in Months ) 
 		(	
 			sum( c in Components ) ( CostProd[t][c][m] * Production[c][m] )
@@ -40,11 +55,11 @@ dexpr float Risk = sum (t1 in Scenarios, t2 in Scenarios ) (
 			0.5 * abs(Cost[t1] - Cost[t2]) * 1/N * 1/N
 		);
 
-//Funkcja celu	  	
-minimize 
-  Risk;
+////Funkcja celu	  	
+maximize 
+  z + epsilon * (MPOCost + MPORisk);
   
-//Ograniczenia  
+////Ograniczenia  
 subject to {
 
   oUmowaA:
@@ -91,11 +106,23 @@ subject to {
       oSupplyLimit:
         Use[r]["A"][m] + Use[r]["B"][m] <= Supply[r][m];
   	}
+  	
+  //ograniczenia MPO
+  oMPO1:
+    z <= MPOCost;
+  oMPO2:
+    z <= MPORisk;
+  oMPO3:
+    MPOCost <= beta * lambdaAvgCost * ( AspAvgCost - AvgCost );
+    MPOCost <= lambdaAvgCost * ( AspAvgCost - AvgCost );
+  oMPO4:
+    MPORisk <= beta * lambdaRisk * ( AspRisk - Risk );
+    MPORisk <= lambdaRisk * ( AspRisk - Risk );
 
 };    
 
 
 
-execute DISPLAY {
-         writeln("Risk = ",Risk,", AvgCost = ",AvgCost);
-}
+//execute DISPLAY {
+//         writeln("Risk = ",Risk,", AvgCost = ",AvgCost);
+//}

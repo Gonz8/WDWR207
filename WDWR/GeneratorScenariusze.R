@@ -14,7 +14,7 @@ limit <- function(vec, min, max)
 }
 
 
-n = 10
+n = 1000
 
 mu = c(55, 40, 50, 35, 45, 30)
 
