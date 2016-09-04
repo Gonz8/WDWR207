@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="ASCII"?><project>
 	<version>1.0</version>
 	<configs>
-		<config default="true" name="Konfiguracja1" category="opl">
-			<ref type="model" name="WDWR.mod">
+		<config default="false" name="KonfiguracjaMain" category="opl">
+			<ref type="model" name="WDWR_script.mod">
 			</ref>
-			<ref type="data" name="WDWR.dat">
+		</config>
+		<config default="true" name="KonfiguracjaMin1" category="opl">
+			<ref type="data" name="bscData.dat">
+			</ref>
+			<ref type="data" name="Scenariusze.dat">
+			</ref>
+			<ref type="data" name="CostRiskFlag.dat">
+			</ref>
+			<ref type="model" name="WDWR_minCostOrRisk.mod">
+			</ref>
+		</config>
+		<config default="false" name="KonfiguracjaMPO" category="opl">
+			<ref type="model" name="WDWR_mpo.mod">
+			</ref>
+			<ref type="data" name="bscData.dat">
+			</ref>
+			<ref type="data" name="Scenariusze.dat">
+			</ref>
+			<ref type="data" name="DataMPO.dat">
 			</ref>
 		</config>
 	</configs>
