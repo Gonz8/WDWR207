@@ -1,0 +1,12 @@
+lambdaAvgCost;4.91273e-005
+lambdaRisk;0.000322842
+UtopiaAvgCost;94376.7
+NadirAvgCost;114732
+UtopiaRisk;976.949
+NadirRisk;4074.44
+;;Koszt; Ryzyko; AspiracjaKoszt; AspiracjaRyzyko; KomponentA miesiac 1; KomponentA miesiac 2; KomponentA miesiac 3; KomponentB miesiac 1; KomponentB miesiac 2; KomponentB miesiac 3
+;;102250;2175.05;94376.7;976.949;0;558;542;581;62;557
+;;100523;2428.52;94376.7;1493.2;0;635;465;628;0;572
+;;98930.4;2702.55;94376.7;2009.45;0;790;310;651;0;549
+;;97478.3;2996.38;94376.7;2525.7;0;915;185;635;0;565
+;;96080.4;3300.94;94376.7;3041.94;0;1062;38;680;0;520

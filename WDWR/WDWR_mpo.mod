@@ -51,6 +51,10 @@ dexpr float Cost[t in Scenarios] = sum( m in Months )
 	   	
 dexpr float AvgCost = (sum( t in Scenarios ) Cost[t]) / N;
 
+dexpr float RiskPerSc[t in Scenarios] = sum (t2 in Scenarios) (
+			0.5 * abs(Cost[t] - Cost[t2]) * 1/N
+);
+
 dexpr float Risk = sum (t1 in Scenarios, t2 in Scenarios ) (
 			0.5 * abs(Cost[t1] - Cost[t2]) * 1/N * 1/N
 		);
@@ -124,5 +128,5 @@ subject to {
 
 
 //execute DISPLAY {
-//         writeln("Risk = ",Risk,", AvgCost = ",AvgCost);
+//         writeln("Risk = ",Risk,", AvgCost = ",AvgCost," RiskPerSc1 = ", RiskPerSc[1]);
 //}
